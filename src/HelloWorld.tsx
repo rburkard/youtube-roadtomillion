@@ -12,6 +12,7 @@ import {Path} from './HelloWorld/Path';
 import {Shark} from './HelloWorld/Shark';
 import {Ship} from './HelloWorld/Ship';
 import {Waves} from './HelloWorld/Waves';
+import {Labels} from './HelloWorld/Labels';
 
 const baseStyle: CSSProperties = {
 	justifyContent: 'center',
@@ -81,14 +82,26 @@ export const HelloWorld: React.FC = () => {
 				>
 					<Waves zoom={zoom} />
 				</Sequence>
-				<Sequence style={{...baseStyle, zIndex: 1}}>
+				<Sequence
+					from={timelineActions.dropShip}
+					style={{...baseStyle, zIndex: 1}}
+				>
 					<Shark />
 				</Sequence>
-				<Sequence style={{...baseStyle, zIndex: 0}}>
+				<Sequence
+					from={timelineActions.dropShip}
+					style={{...baseStyle, zIndex: 0}}
+				>
 					<Path />
 				</Sequence>
-				<Sequence style={{...baseStyle, zIndex: 1}}>
+				<Sequence
+					from={timelineActions.dropShip}
+					style={{...baseStyle, zIndex: 1}}
+				>
 					<Island animateWaterUpDown={animateWaterUpDown} />
+				</Sequence>
+				<Sequence style={{...baseStyle, zIndex: 1}}>
+					<Labels />
 				</Sequence>
 			</AbsoluteFill>
 		</TimelineContext.Provider>

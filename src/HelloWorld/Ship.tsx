@@ -63,7 +63,7 @@ export const Ship: React.FC<{
 					style={{
 						transform: `rotate(${rotation}deg) scale(${zoom}`,
 						clipPath:
-							frame > timelineActions.dropShip + fps
+							frame > timelineActions.dropShip + fps * 1.5
 								? `ellipse(100% ${85 + animateWaterUpDown / 3}% at 40% 10%)`
 								: 'none',
 					}}

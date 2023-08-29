@@ -12,7 +12,7 @@ export const Shark: React.FC = () => {
 
 	const animateLeftRight = interpolate(
 		frame,
-		[0, durationInFrames / 2],
+		[0, durationInFrames],
 		[2000, -600],
 		{
 			extrapolateRight: 'clamp',

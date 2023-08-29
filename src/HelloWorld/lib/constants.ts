@@ -29,7 +29,7 @@ export const history = [
 	{
 		date: '17-10-2023',
 		title: 'Mobility Wrapped 4',
-		income: 200,
+		income: 10000,
 		spending: 200,
 		timeEffort: 8,
 	},
