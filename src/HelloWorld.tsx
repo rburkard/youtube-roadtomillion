@@ -1,76 +1,96 @@
-import {spring} from 'remotion';
+import {interpolate} from 'remotion';
+import {createContext, CSSProperties, useContext} from 'react';
 import {
 	AbsoluteFill,
-	interpolate,
 	Sequence,
+	spring,
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {Logo} from './HelloWorld/Logo';
-import {Subtitle} from './HelloWorld/Subtitle';
-import {Title} from './HelloWorld/Title';
-import {z} from 'zod';
-import {zColor} from '@remotion/zod-types';
+import {Island} from './HelloWorld/Island';
+import {Path} from './HelloWorld/Path';
+import {Shark} from './HelloWorld/Shark';
+import {Ship} from './HelloWorld/Ship';
+import {Waves} from './HelloWorld/Waves';
 
-export const myCompSchema = z.object({
-	titleText: z.string(),
-	titleColor: zColor(),
-	logoColor1: zColor(),
-	logoColor2: zColor(),
-});
+const baseStyle: CSSProperties = {
+	justifyContent: 'center',
+	alignItems: 'center',
+};
 
-export const HelloWorld: React.FC<z.infer<typeof myCompSchema>> = ({
-	titleText: propOne,
-	titleColor: propTwo,
-	logoColor1,
-	logoColor2,
-}) => {
+export type TimelineActions = {
+	enterShip: number;
+	enterRoman: number;
+	appearWaves: number;
+	dropShip: number;
+	driveAlongPath: number;
+	driveAlongPathEnd: number;
+};
+
+type TimelineContextType = TimelineActions | null;
+
+const TimelineContext = createContext<TimelineContextType>(null);
+
+export const useTimelineContext = () => {
+	const timelineContext = useContext(TimelineContext);
+
+	if (!timelineContext) {
+		throw new Error('no timeline context available');
+	}
+
+	return timelineContext;
+};
+
+export const HelloWorld: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {durationInFrames, fps} = useVideoConfig();
 
-	// Animate from 0 to 1 after 25 frames
-	const logoTranslationProgress = spring({
-		frame: frame - 25,
-		fps,
-		config: {
-			damping: 100,
-		},
-	});
+	const timelineActions: TimelineActions = {
+		enterShip: 0,
+		enterRoman: fps,
+		appearWaves: fps,
+		dropShip: 4 * fps,
+		driveAlongPath: 10 * fps,
+		driveAlongPathEnd: 20 * fps,
+	};
 
-	// Move the logo up by 150 pixels once the transition starts
-	const logoTranslation = interpolate(
-		logoTranslationProgress,
-		[0, 1],
-		[0, -150]
-	);
+	const zoom =
+		1.4 -
+		spring({
+			frame,
+			fps,
+			delay: 5 * fps,
+			config: {
+				damping: 100,
+			},
+		});
 
-	// Fade out the animation at the end
-	const opacity = interpolate(
-		frame,
-		[durationInFrames - 25, durationInFrames - 15],
-		[1, 0],
-		{
-			extrapolateLeft: 'clamp',
-			extrapolateRight: 'clamp',
-		}
-	);
+	const animateWaterUpDown =
+		5 * Math.sin(Number(interpolate(frame, [0, 800], [0, fps * 2])));
 
 	// A <AbsoluteFill> is just a absolutely positioned <div>!
 	return (
-		<AbsoluteFill style={{backgroundColor: 'white'}}>
-			<AbsoluteFill style={{opacity}}>
-				<AbsoluteFill style={{transform: `translateY(${logoTranslation}px)`}}>
-					<Logo logoColor1={logoColor1} logoColor2={logoColor2} />
-				</AbsoluteFill>
-				{/* Sequences can shift the time for its children! */}
-				<Sequence from={35}>
-					<Title titleText={propOne} titleColor={propTwo} />
+		<TimelineContext.Provider value={timelineActions}>
+			<AbsoluteFill style={{...baseStyle, backgroundColor: 'white'}}>
+				<Sequence style={{...baseStyle, zIndex: 1}}>
+					<Ship zoom={zoom} animateWaterUpDown={animateWaterUpDown} />
 				</Sequence>
-				{/* The subtitle will only enter on the 75th frame. */}
-				<Sequence from={75}>
-					<Subtitle />
+				<Sequence
+					style={{...baseStyle, border: '5px solid purple', zIndex: 0}}
+					from={3 * fps}
+				>
+					<Waves zoom={zoom} />
+				</Sequence>
+				<Sequence style={{...baseStyle, zIndex: 1}}>
+					<Shark />
+				</Sequence>
+				<Sequence style={{...baseStyle, zIndex: 0}}>
+					<Path />
+				</Sequence>
+				<Sequence style={{...baseStyle, zIndex: 1}}>
+					<Island animateWaterUpDown={animateWaterUpDown} />
 				</Sequence>
 			</AbsoluteFill>
-		</AbsoluteFill>
+		</TimelineContext.Provider>
 	);
 };
