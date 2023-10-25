@@ -40,7 +40,11 @@ export const Ship: React.FC<{
 	const driveAlongPath = interpolate(
 		frame,
 		[timelineActions.driveAlongPath, timelineActions.driveAlongPathEnd],
-		[0, 100]
+		[0, 100],
+		{
+			extrapolateRight: 'clamp',
+			extrapolateLeft: 'clamp',
+		}
 	);
 
 	return (
@@ -79,25 +83,6 @@ export const Ship: React.FC<{
 						opacity,
 					}}
 				/>
-				{frame > 10 * fps && frame < 20 * fps && (
-					<h1
-						style={{
-							color:
-								Math.floor((driveAlongPath / 100) * calcProfitLoss(history)) >=
-								0
-									? '#00ff00'
-									: '#e01e1e',
-							fontSize: 80,
-							margin: 0,
-							fontFamily: 'Trebuchet MS',
-							position: 'absolute',
-							bottom: 0,
-							left: 0,
-						}}
-					>
-						{Math.floor((driveAlongPath / 100) * calcProfitLoss(history))} $
-					</h1>
-				)}
 			</div>
 		</div>
 	);

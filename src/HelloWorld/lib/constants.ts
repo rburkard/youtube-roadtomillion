@@ -8,29 +8,24 @@ export const history = [
 	{
 		date: '17-08-2023',
 		title: 'Mobility Wrapped',
-		income: 0,
+		income: 1000,
 		spending: 0,
-		timeEffort: 40,
+		timeEffort: 0,
 	},
 	{
 		date: '17-08-2023',
-		title: 'Mobility Wrapped 2',
+		title: 'Go Viral On TikTok',
 		income: 0,
-		spending: 200,
-		timeEffort: 80,
-	},
-	{
-		date: '17-09-2023',
-		title: 'Mobility Wrapped 3',
-		income: 100,
-		spending: 200,
-		timeEffort: 80,
-	},
-	{
-		date: '17-10-2023',
-		title: 'Mobility Wrapped 4',
-		income: 10000,
-		spending: 200,
-		timeEffort: 8,
+		spending: 0,
+		timeEffort: 0,
 	},
 ];
+
+export const recruiterSayings = [
+	'I came across your impressive profile and wanted to discuss a great opportunity I believe aligns with your skills',
+	`I believe your expertise could make a meaningful impact on our projects.`,
+	`Your experience in Coding could be a strong asset for a position we're currently hiring for.`,
+	`I noticed your proficiency in Coding – let's discuss how it could translate to a key role at our organization."`,
+];
+
+export const friendMessage = 'Quote of the Day: how far you will go?';

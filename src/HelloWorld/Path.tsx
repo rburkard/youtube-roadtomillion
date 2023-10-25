@@ -21,7 +21,17 @@ export const Path: React.FC = () => {
 		return pathRef.current ? (pathRef.current as any).getTotalLength() : 0;
 	};
 
-	const animatePath = interpolate(frame, [0, 2 * fps], [0, getPathLength()], {
+	const animatePath = interpolate(frame, [0, 4 * fps], [0, getPathLength()], {
+		extrapolateRight: 'clamp',
+		extrapolateLeft: 'clamp',
+	});
+
+	const appearPath = interpolate(frame, [0, 2 * fps], [0, 1], {
+		extrapolateRight: 'clamp',
+		extrapolateLeft: 'clamp',
+	});
+
+	const appearCircles = interpolate(frame, [4 * fps, 5 * fps], [0, 1], {
 		extrapolateRight: 'clamp',
 		extrapolateLeft: 'clamp',
 	});
@@ -32,19 +42,21 @@ export const Path: React.FC = () => {
 				ref={pathRef}
 				d={path}
 				fill="transparent"
-				stroke="black"
-				strokeWidth={10}
+				stroke="#F9CB8F"
+				opacity={appearPath}
+				strokeWidth={5}
 				strokeDasharray={getPathLength()}
 				strokeDashoffset={getPathLength() - animatePath}
 			/>
-			{nodes.map((node) => {
+			{nodes.map((node, idx) => {
 				return (
 					<circle
+						opacity={appearCircles}
 						cx={node.x}
 						cy={node.y}
 						r={16}
-						fill="transparent"
-						stroke="black"
+						fill="#F9CB8F"
+						stroke="#F9CB8F"
 						strokeWidth={5}
 					/>
 				);

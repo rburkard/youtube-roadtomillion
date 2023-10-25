@@ -1,5 +1,6 @@
 import {CSSProperties, useMemo} from 'react';
-import {useCurrentFrame, useVideoConfig} from 'remotion';
+import {interpolate, Sequence, useCurrentFrame, useVideoConfig} from 'remotion';
+import {useTimelineContext} from '../HelloWorld';
 import {Label} from './Label';
 import {history} from './lib/constants';
 import {calcNodes} from './lib/functions';
@@ -7,20 +8,33 @@ import {calcNodes} from './lib/functions';
 export const Labels: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
+	const timelineActions = useTimelineContext();
 
 	const nodes = useMemo(() => {
 		return calcNodes(history);
 	}, []);
 
-	const getNode = (frame: number) => {
-		const idx = Math.floor(frame / 100);
+	const calcIncrement = () => {
+		const movingFrames =
+			timelineActions.driveAlongPathEnd - timelineActions.driveAlongPath;
 
-		if (idx >= nodes.length) {
-			return nodes[nodes.length - 1];
-		}
+		const perNode = movingFrames / nodes.length;
 
-		return nodes[idx];
+		return perNode;
 	};
 
-	return <Label key={getNode(frame).title} node={getNode(frame)} />;
+	return (
+		<>
+			{nodes.map((node, idx) => {
+				return (
+					<Sequence
+						from={calcIncrement() * (idx + 1)}
+						durationInFrames={3 * fps}
+					>
+						<Label node={node} />
+					</Sequence>
+				);
+			})}
+		</>
+	);
 };
