@@ -1,2 +1,3 @@
-This is a Remotion video template to automatically generate the intro to my youtube channel.
-[![Watch the video]](https://drive.google.com/uc?export=download&id=1Vb0s4SxjzO9w2B4Vv-eN6HTzmrV7Sauu)
+This is a Remotion video template to automatically generate the intro for a weekly YouTube channel.
+
+https://github.com/rburkard/youtube-roadtomillion/assets/66911602/9fb43788-c45b-44da-b3c6-dd7a7cfa425c
